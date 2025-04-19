@@ -35,7 +35,7 @@ app.use('/users', userRoutes);
 
 // Home route
 app.get('/',  (req, res) => {
-  res.json({message:"welcome !"}); // Render the index.ejs file
+  res.json({message:"welcome !"});
 });
 
 // Configure multer for file uploads
