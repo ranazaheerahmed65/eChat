@@ -21,6 +21,7 @@ router.post('/send-request', authenticate, async (req, res) => {
   });
   
   
+  
 
 // Accept a friend request
 router.post('/accept-request', authenticate, async (req, res) => {
