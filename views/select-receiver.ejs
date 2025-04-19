@@ -1,0 +1,64 @@
+<%- include('partials/_header', { title: 'Select a User to Chat With' }) %>
+
+<div class="container-fluid vh-100 d-flex flex-column">
+  <div class="row flex-grow-1">
+    <!-- Sidebar (Visible on Mobile, Hidden on Large Screens) -->
+    <div id="sidebar" class="col-12 col-lg-3 bg-secondary  px-3 pt-3">
+      <%- include('partials/_sidebar', { users, token, friendRequests }); %>
+    </div>
+
+    <!-- Main Content Area (Hidden on Mobile, Visible on Large Screens) -->
+    <div class="col-lg-9 d-none d-lg-block d-flex flex-column bg-light p-0">
+      <!-- Header Section -->
+      <div class="bg-secondary py-2 px-3 text-white">
+        <h1 class="lead fs-4 fw-bold mb-0">Select a User to Chat With</h1>
+      </div>
+
+      <!-- Instructional Text -->
+      <div class="p-3">
+        <p class="lead">Click on a user from the sidebar to start chatting.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const userId = "<%= userId %>";
+    const socket = io({
+        query: {
+            userId: userId,
+            token: "<%= token %>"
+        }
+    });
+
+    // Handle online/offline events
+    socket.on("user_online", (data) => {
+        console.log(`User ${data.userId} is now online`);
+        // Update UI accordingly
+        updateUserStatus(data.userId, true);
+    });
+
+    socket.on("user_offline", (data) => {
+        console.log(`User ${data.userId} is now offline`);
+        // Update UI accordingly
+        updateUserStatus(data.userId, false);
+    });
+
+    // Function to update UI
+    function updateUserStatus(userId, isOnline) {
+        // Implement your UI update logic here
+        // For example:
+        const statusElement = document.querySelector(`.user-status[data-user-id="${userId}"]`);
+        if (statusElement) {
+            statusElement.textContent = isOnline ? 'Online' : 'Offline';
+            statusElement.className = `user-status ${isOnline ? 'online' : 'offline'}`;
+        }
+    }
+
+    // Handle page/browser close
+    window.addEventListener('beforeunload', () => {
+        socket.emit("user_disconnect");
+    });
+</script>
+
+<%- include('partials/_footer') %>

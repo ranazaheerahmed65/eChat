@@ -1,0 +1,12 @@
+<div class="px-3 pt-2">
+    <button class="border-0 outline-none bg-transparent" id="close-add-new">
+        <i class="bi bi-arrow-left-short"></i>
+    </button>
+
+    <form id="search-users-form" action="/users/search" method="GET" class="my-2 d-flex align-items-center gap-2">
+        <input type="text" id="username" name="username" placeholder="Write username to start chat with ..." class="form-control" required>
+        <button type="submit" class="btn btn btn-primary">search</button>
+    </form>
+    <h4>Users:</h4>
+    <div id="search-results"></div>
+</div>

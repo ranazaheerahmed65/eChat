@@ -1,0 +1,59 @@
+<%- include("partials/_header", { title: "Search Results" }) %>
+
+  <div class="container-fluid vh-100 d-flex flex-column">
+    <div class="row flex-grow-1">
+      <!-- Sidebar (Hidden on Mobile) -->
+      <div class="col-lg-3 d-none d-lg-block bg-secondary p-3">
+        <%- include('partials/_sidebar', { users, token, friendRequests }); %>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="col-lg-9 d-flex flex-column bg-light p-0">
+        <!-- Search Results Header -->
+        <div class="bg-secondary py-2 px-3">
+          <h2 class="lead fs-4 fw-bold mb-0 text-white">
+            <a class="text-white text-decoration-none px-2" href="/users/select-receiver">
+              <i class="ri-arrow-left-line"></i>
+            </a>
+            Search Results
+          </h2>
+        </div>
+
+        <!-- Search Results Body -->
+        <div id="search-results-window" class="p-3">
+          <% if (users.length===0) { %>
+            <p>No users found.</p>
+            <% } else { %>
+              <ul class="list-unstyled">
+                <% users.forEach(user=> { %>
+                  <li class="user border p-3 mb-2 rounded bg-white d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-2">
+                    <div class="rounded-circle overflow-hidden" style="width: 60px; height: 60px;">
+                      <img src="/<%= user.avatar_url %>" class="img-fluid rounded-circle" alt="<%= user.username %>'s avatar" width="60px" height="60px">
+                    </div>
+                    <div>
+                     <strong><%= user.username %></strong> 
+                    </div>
+                    </div>
+                    <% if (friends.some(friend=> friend.id === user.id)) { %>
+                      <!-- If Already Friends, show a link to chat -->
+                      <a href="/messages/chat?receiverId=<%= user.id %>"
+                        class="btn btn-secondary">Start Chat</a>
+                      <% } else { %>
+                        <!-- If not friends, show the send friend request form -->
+                        <form action="/friends/send-request" method="POST" class="d-flex align-items-center">
+                          <input type="hidden" name="receiverId" value="<%= user.id %>">
+                          <input type="hidden" name="token" value="<%= token %>">
+                          <button type="submit" class="btn btn-primary">Send Friend Request</button>
+                        </form>
+                        <% } %>
+                  </li>
+                  <% }); %>
+              </ul>
+              <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include("partials/_footer") %>
